@@ -3,12 +3,15 @@ import 'reflect-metadata'
 import { DataSource } from 'typeorm'
 
 import { env } from '../config/env.js'
+import { EventEntity } from './entities/event.entity.js'
+import { ParticipantEntity } from './entities/participant.entity.js'
 
 export const AppDataSource = new DataSource({
     type: 'postgres',
     url: env.DATABASE_URL,
     synchronize: env.NODE_ENV === 'development',
     logging: env.NODE_ENV === 'development',
+    entities: [EventEntity, ParticipantEntity],
     migrations: [],
     subscribers: []
 })
