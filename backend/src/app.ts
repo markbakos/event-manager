@@ -9,6 +9,7 @@ import {
 import { registerGraphQL } from './plugins/graphql.js';
 import {NotificationQueue} from "./modules/notifications/notification.queue.js";
 import {EmailService} from "./modules/notifications/email.service.js";
+import {EventsService} from "./modules/events/events.service.js";
 
 export const buildApp = async () => {
     await initializeDatabase();
@@ -33,6 +34,8 @@ export const buildApp = async () => {
         }
     })
 
+    const eventsService = new EventsService(AppDataSource, notificationQueue)
+
     app.get('/healthz', async () => {
         return {
             status: 'ok',
@@ -42,7 +45,7 @@ export const buildApp = async () => {
         };
     });
 
-    await registerGraphQL(app);
+    await registerGraphQL(app, { eventsService });
 
     app.addHook('onClose', async () => {
         await notificationQueue.stop()
