@@ -2,7 +2,7 @@ import { env } from '../config/env.js';
 import { AppDataSource } from '../database/data-source.js';
 import { EVENT_LOCATIONS } from '../shared/locations.js';
 
-export const schema = `
+export const schema = /* GraphQL */ `
   type HealthCheck {
     status: String!
     database: String!
