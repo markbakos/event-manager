@@ -1,0 +1,7 @@
+.env
+node_modules
+dist
+postgres_data
+mailpit_data
+backend/node_modules
+backend/dist
