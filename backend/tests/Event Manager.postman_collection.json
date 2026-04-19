@@ -1,0 +1,289 @@
+{
+	"info": {
+		"_postman_id": "024fcee7-52ee-42cd-8119-7b4491455bb8",
+		"name": "Event Manager",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "50720649",
+		"_collection_link": "https://markbakosss-4475713.postman.co/workspace/Mark's-Workspace~ebc9b098-2b2c-44cf-8a2e-d09cd6038f12/collection/50720649-024fcee7-52ee-42cd-8119-7b4491455bb8?action=share&source=collection_link&creator=50720649"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/healthz",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"healthz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Locations",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query { locations { id name } }\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Event",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"const id = json?.data?.createEvent?.id;",
+							"if (id) {",
+							"  pm.collectionVariables.set('eventId', id);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateEvent($input: CreateEventInput!) { createEvent(input: $input) { id title status locationId startAt endAt participants { id email } } }\",\n  \"variables\": {\n    \"input\": {\n      \"title\": \"Event 1\",\n      \"locationId\": \"budapest-office\",\n      \"startAt\": \"2026-05-25T09:00:00.000Z\",\n      \"endAt\": \"2026-05-25T10:00:00.000Z\",\n      \"participantEmails\": [\"A@test.com\", \"B@test.com\"]\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List Events",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query { events { id title status locationId location { id name } startAt endAt participants { id email } createdAt updatedAt } }\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Event By ID",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query Event($id: ID!) { event(id: $id) { id title status locationId location { id name } startAt endAt participants { id email } createdAt updatedAt } }\",\n  \"variables\": {\n    \"id\": \"{{eventId}}\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation UpdateEvent($id: ID!, $input: UpdateEventInput!) { updateEvent(id: $id, input: $input) { id title status locationId startAt endAt participants { id email } } }\",\n  \"variables\": {\n    \"id\": \"{{eventId}}\",\n    \"input\": {\n      \"title\": \"Event 1 Updated\",\n      \"locationId\": \"debrecen-office\",\n      \"startAt\": \"2026-05-26T11:00:00.000Z\",\n      \"endAt\": \"2026-05-26T12:00:00.000Z\",\n      \"participantEmails\": [\"A@test.com\", \"C@test.com\"]\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Publish Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation PublishEvent($id: ID!) { publishEvent(id: $id) { id title status participants { email } } }\",\n  \"variables\": {\n    \"id\": \"{{eventId}}\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Event",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation DeleteEvent($id: ID!) { deleteEvent(id: $id) }\",\n  \"variables\": {\n    \"id\": \"{{eventId}}\"\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative - Create Published Event 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateEvent($input: CreateEventInput!) { createEvent(input: $input) { id title status } }\",\n  \"variables\": {\n    \"input\": {\n      \"title\": \"Published Event 1\",\n      \"locationId\": \"budapest-office\",\n      \"startAt\": \"2026-04-26T09:00:00.000Z\",\n      \"endAt\": \"2026-04-26T10:00:00.000Z\",\n      \"participantEmails\": [\"test@test.com\"],\n      \"status\": \"PUBLISHED\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Negative - Create Overlapping Published Event 2",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateEvent($input: CreateEventInput!) { createEvent(input: $input) { id title status } }\",\n  \"variables\": {\n    \"input\": {\n      \"title\": \"Published Event 2\",\n      \"locationId\": \"budapest-office\",\n      \"startAt\": \"2026-04-26T09:30:00.000Z\",\n      \"endAt\": \"2026-04-26T10:30:00.000Z\",\n      \"participantEmails\": [\"test2@test.com\"],\n      \"status\": \"PUBLISHED\"\n    }\n  }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/graphql",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:4000"
+		},
+		{
+			"key": "eventId",
+			"value": ""
+		}
+	]
+}
