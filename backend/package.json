@@ -16,6 +16,7 @@
     "graphql": "^16.13.2",
     "mercurius": "^16.9.0",
     "pg": "^8.20.0",
+    "pg-boss": "^12.15.0",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28"
   },
