@@ -12,3 +12,5 @@ export const EVENT_LOCATIONS = [
         name: 'Remote'
     }
 ] as const;
+
+export const LOCATION_BY_ID = new Map(EVENT_LOCATIONS.map((location) => [location.id, location]))
