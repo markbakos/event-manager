@@ -1,7 +1,7 @@
 # Event Manager
 
-**Backend**: Fastify + TypeScript + GraphQL (Mercurius) + TypeORM
-**Queue**: pg-boss (PostgreSQL-backed async jobs)
+**Backend**: Fastify + TypeScript + GraphQL (Mercurius) + TypeORM<br>
+**Queue**: pg-boss (PostgreSQL-backed async jobs)<br>
 **Database**: PostgreSQL 18.3
 
 ## Run locally
@@ -20,5 +20,5 @@ docker compose up --build
 
 ## Testing
 
-Import `backend/tests/Event Manager.postman_collection.json` into Postman to test out every request.
+Import `backend/tests/Event Manager.postman_collection.json` into Postman to test out every request.<br>
 After publishing an event successfully, check the Mailpit URL.
