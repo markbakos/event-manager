@@ -8,6 +8,7 @@ import {
 } from './database/data-source.js';
 import { registerGraphQL } from './plugins/graphql.js';
 import {NotificationQueue} from "./modules/notifications/notification.queue.js";
+import {EmailService} from "./modules/notifications/email.service.js";
 
 export const buildApp = async () => {
     await initializeDatabase();
@@ -19,6 +20,18 @@ export const buildApp = async () => {
     const notificationQueue = new NotificationQueue(env.DATABASE_URL)
     await notificationQueue.start()
     await notificationQueue.ensureQueues()
+
+    const emailService = new EmailService({
+        host: env.MAIL_HOST,
+        port: env.MAIL_PORT,
+        from: env.MAIL_FROM
+    })
+
+    await notificationQueue.registerWorkers({
+        onEventPublishedEmail: async (payload) => {
+            await emailService.sendEventPublishedEmail(payload)
+        }
+    })
 
     app.get('/healthz', async () => {
         return {
