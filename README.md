@@ -20,4 +20,5 @@ docker compose up --build
 
 ## Testing
 
-cUrl commands in `backend/tests`
+Import `backend/tests/Event Manager.postman_collection.json` into Postman to test out every request.
+After publishing an event successfully, check the Mailpit URL.
