@@ -7,6 +7,7 @@ import {
     initializeDatabase
 } from './database/data-source.js';
 import { registerGraphQL } from './plugins/graphql.js';
+import {NotificationQueue} from "./modules/notifications/notification.queue.js";
 
 export const buildApp = async () => {
     await initializeDatabase();
@@ -14,6 +15,10 @@ export const buildApp = async () => {
     const app = Fastify({
         logger: env.NODE_ENV === 'development'
     });
+
+    const notificationQueue = new NotificationQueue(env.DATABASE_URL)
+    await notificationQueue.start()
+    await notificationQueue.ensureQueues()
 
     app.get('/healthz', async () => {
         return {
@@ -27,6 +32,7 @@ export const buildApp = async () => {
     await registerGraphQL(app);
 
     app.addHook('onClose', async () => {
+        await notificationQueue.stop()
         await destroyDatabase();
     });
 
