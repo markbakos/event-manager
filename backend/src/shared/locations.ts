@@ -14,3 +14,5 @@ export const EVENT_LOCATIONS = [
 ] as const;
 
 export const LOCATION_BY_ID = new Map(EVENT_LOCATIONS.map((location) => [location.id, location]))
+
+export type LocationId = (typeof EVENT_LOCATIONS)[number]['id']

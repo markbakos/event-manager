@@ -9,6 +9,7 @@ import {
 } from 'typeorm'
 
 import { ParticipantEntity } from './participant.entity.js'
+import type { LocationId } from '../../shared/locations.js'
 
 export enum EventStatus {
   DRAFT = 'DRAFT',
@@ -28,7 +29,7 @@ export class EventEntity {
   status!: EventStatus
 
   @Column({ type: 'varchar', length: 100 })
-  locationId!: string
+  locationId!: LocationId
 
   @Column({ type: 'timestamptz' })
   startAt!: Date
